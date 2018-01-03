@@ -31,7 +31,7 @@ list_t *make_list() {
     list_t *ret = (list_t*)calloc(1,sizeof(list_t));
     ret->first = NULL;
     ret->last = NULL;
-    ret->size = 0
+    ret->size = 0;
     return ret;
 }
 
