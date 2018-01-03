@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "list.h"
 /* 
   Double-pointer linked list implementation
 */
@@ -10,11 +11,11 @@ typedef struct node {
     struct node *next;
 } node_t;
 
-typedef struct list {
-    node_t *first;
-    node_t *last;
-    int32_t size;
-} list_t;
+/* typedef struct list { */
+/*     node_t *first; */
+/*     node_t *last; */
+/*     int32_t size; */
+/* } list_t; */
 
 node_t *make_node(uint8_t c) {
     node_t *ret = (node_t*)calloc(1, sizeof(node_t));
@@ -69,7 +70,7 @@ void insert_back(list_t *l, uint8_t val) {
     l->size++;
 }
 uint8_t remove_front(list_t *l) {
-    if (l->first == NULL) {return 0}
+    if (l->first == NULL) {return 0;}
     node_t *cur = l->first;
     uint8_t val = cur->data;
     l->first = cur->next;

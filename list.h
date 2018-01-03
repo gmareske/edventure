@@ -1,5 +1,9 @@
 #pragma once
 
+#include <stdint.h>
+
+typedef struct node node_t;
+
 typedef struct list {
     node_t *first;
     node_t *last;
