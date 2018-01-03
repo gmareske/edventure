@@ -11,16 +11,16 @@ typedef struct node {
     struct node *next;
 } node_t;
 
-/* typedef struct list { */
-/*     node_t *first; */
-/*     node_t *last; */
-/*     int32_t size; */
-/* } list_t; */
+typedef struct list {
+    node_t *first;
+    node_t *last;
+    int32_t size;
+} list_t;
 
 node_t *make_node(uint8_t c) {
     node_t *ret = (node_t*)calloc(1, sizeof(node_t));
-    ret->data=c;
-    ret->next=NULL;
+    ret->data = c;
+    ret->next = NULL;
     return ret;
 }
 void free_node(node_t *n) {
@@ -29,8 +29,9 @@ void free_node(node_t *n) {
 
 list_t *make_list() {
     list_t *ret = (list_t*)calloc(1,sizeof(list_t));
-    ret->first=NULL;
-    ret->last=NULL;
+    ret->first = NULL;
+    ret->last = NULL;
+    ret->size = 0
     return ret;
 }
 
@@ -77,4 +78,8 @@ uint8_t remove_front(list_t *l) {
     free(cur);
     l->size--;
     return val;
+}
+
+uint32_t get_size(list_t *l) {
+    return l->size;
 }
