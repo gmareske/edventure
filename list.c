@@ -79,7 +79,21 @@ uint8_t remove_front(list_t *l) {
     l->size--;
     return val;
 }
-
 uint32_t get_size(list_t *l) {
     return l->size;
+}
+uint8_t get(list_t *l, uint32_t pos) {
+    if (pos <= l->size) {return 0;}
+    node_t *cur = l->first;
+    for (uint32_t i = 0; i < pos; i++) {
+	cur = cur->next;
+    }
+    if (cur != NULL) {
+	return cur->data;
+    } else {
+	return 0;
+    }
+}
+uint8_t get_first(list_t *l) {
+    return get(l, 0);
 }
