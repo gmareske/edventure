@@ -60,15 +60,17 @@ void insert_front(list_t *l, uint8_t val) {
 
 void insert_back(list_t *l, uint8_t val) {
     node_t *n = make_node(val);
-    l->last->next = n;
-    l->last = n;
-    n->next = NULL;
-    if (l->first = NULL) {
+    if (l->last == NULL) {
 	// this is the first added element
-	// update the front pointer
+	l->last = n;
 	l->first = n;
+	l->size++;
+    } else {
+	l->last->next = n;
+	l->last = n;
+	n->next = NULL;
+	l->size++;
     }
-    l->size++;
 }
 uint8_t remove_front(list_t *l) {
     if (l->first == NULL) {return 0;}
