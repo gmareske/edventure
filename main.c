@@ -20,6 +20,8 @@ uint32_t file_size(char *fname) {
     struct stat st;
     if (stat(fname, &st) > -1) {
 	return st.st_size;
+    } else {
+	return -1;
     }
 }
 
@@ -34,7 +36,7 @@ game_t *make_game(FILE *fp, uint32_t startpos) {
 	c = getc(fp);
 	insert_front(ret->left, c);
     }
-    while ((c = getc(fp)) != EOF) {
+    while ((int32_t)(c = getc(fp)) != EOF) {
 	insert_back(ret->right, c);
     }
     return ret;
@@ -82,7 +84,6 @@ void run_game(game_t *g) {
 }
 int main(int argc, char **args) {
     // we care only about the first argument
-    
     if (argc != 2) {
 	printf("Must provide only one argument: edv <filename>\n");
 	return 1;
@@ -94,7 +95,7 @@ int main(int argc, char **args) {
     uint32_t startpos = rand() % fsize;
     printf("file size: %d startpos: %d\n", fsize, startpos);
     
-    game_t *game = make_game(fp, 0);
+    game_t *game = make_game(fp, startpos);
     printf("buffer sizes, left: %d right: %d\n", get_size(game->left), get_size(game->right));
     run_game(game);
     free_game(game);

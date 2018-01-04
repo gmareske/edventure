@@ -14,7 +14,7 @@ typedef struct node {
 typedef struct list {
     node_t *first;
     node_t *last;
-    int32_t size;
+    uint32_t size;
 } list_t;
 
 node_t *make_node(uint8_t c) {
