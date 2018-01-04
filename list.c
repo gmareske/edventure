@@ -85,7 +85,7 @@ uint32_t get_size(list_t *l) {
     return l->size;
 }
 uint8_t get(list_t *l, uint32_t pos) {
-    if (pos <= l->size) {return 0;}
+    if (pos >= l->size) {return 0;}
     node_t *cur = l->first;
     for (uint32_t i = 0; i < pos; i++) {
 	cur = cur->next;
