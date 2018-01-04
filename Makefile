@@ -1,9 +1,17 @@
-CC = gcc
-CFLAGS = -g -Wall -Wextra -pedantic -std=c11
+CC=gcc
+CFLAGS=-g -Wall -Wextra -pedantic -std=c11
+EXEC=edv
+
+SOURCES=main.c list.c
+OBJECTS=$(SOURCES:.c=.o)
 
 # target_name:  dependency_list
 #	command(s)
+all:
+	$(CC) $(CFLAGS) $(SOURCES) -o $(EXEC)
 
+# $(EXEC): 
+# 	$(CC) $(CFLAGS) $(SOURCES) -o $(EXEC)
 
 # List program components, what they depend on, and how to compile or link each
 
@@ -14,3 +22,4 @@ CFLAGS = -g -Wall -Wextra -pedantic -std=c11
 
 clean:
 	rm -f list *.o *~ core*
+
