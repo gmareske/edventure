@@ -21,5 +21,5 @@ all:
 .PHONY: clean
 
 clean:
-	rm -f list *.o *~ core*
+	rm -f $(EXEC) *.out *.o *~ core*
 
