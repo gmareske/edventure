@@ -8,6 +8,7 @@ typedef struct game {
     list_t *left;
     list_t *right;
     uint32_t pos;
+    FILE *fp;
 } game_t;
 
 game_t *make_game(FILE *fp, uint32_t startpos) {
@@ -15,6 +16,7 @@ game_t *make_game(FILE *fp, uint32_t startpos) {
     ret->pos = startpos;
     ret->left = make_list();
     ret->right = make_list();
+    ret->fp = fp;
     // we know startpos will be less than the length of the file
     uint32_t c;
     for (uint32_t i = 0; i < startpos; i++) {
@@ -26,7 +28,37 @@ game_t *make_game(FILE *fp, uint32_t startpos) {
     }
     return ret;
 }
+
+void exit_game(game_t *g) {
+    // on game exit, write out to the file
+    // the contents of left and right buffers
+    // reset to the beginning
+    fseek(g->fp, 0, SEEK_SET);
+    // the left buffer is backwards, first put all
+    // characters in the the buffer
+    uint32_t lbuf_sz = get_size(g->left);
+    uint8_t *lbuf = (uint8_t*)calloc(lbuf_sz, sizeof(uint8_t));
+    for (uint32_t i = 0; i < lbuf_sz; i++) {
+	// very slow!! O(nlogn) at least
+	lbuf[lbuf_sz - 1 - i] = get(g->left, i);
+    }
+    // write lbuf out
+    // todo: is there a faster way than character by character output?
+    for (uint32_t i = 0; i < lbuf_sz; i++) {
+	fputc(lbuf[i], g->fp); // todo: check errors (fputc returns EOF on error)
+    }
+    free(lbuf);
+    // right side is in order so write it out
+    for (uint32_t i = 0; i < get_size(g->right); i++) {
+	fputc(get(g->right, i), g->fp);
+    }
+    // fp should be closed in main.c so don't close it here
+}
+
 void free_game(game_t *g) {
+    // todo: may move this around
+    // exit game and write out to file
+    exit_game(g);
     free_list(g->left);
     free_list(g->right);
     free(g);
@@ -35,7 +67,7 @@ void free_game(game_t *g) {
 void transfer_from(list_t *origin, list_t *destination) {
     // transfer something across the gap buffer
     // can be called to transfer from left to right or vice versa
-    if (get_size(origin) > 0) {	
+    if (get_size(origin) > 0) {
 	uint8_t val = get_first(origin);
 	remove_front(origin);
 	insert_front(destination, val);

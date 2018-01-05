@@ -25,11 +25,10 @@ int main(int argc, char **args) {
     }
     char *fname = args[1];
     uint32_t fsize = file_size(fname);
-    FILE *fp = fopen(fname, "r");
+    FILE *fp = fopen(fname, "a+");
     srand(time(NULL));
     uint32_t startpos = rand() % fsize;
     printf("file size: %d startpos: %d\n", fsize, startpos);
-    
     game_t *game = make_game(fp, startpos);
     //    printf("buffer sizes, left: %d right: %d\n", get_size(game->left), get_size(game->right));
     run_game(game);
