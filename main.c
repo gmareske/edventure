@@ -29,7 +29,7 @@ int main(int argc, char **args) {
     srand(time(NULL));
     uint32_t startpos = rand() % fsize;
     printf("file size: %d startpos: %d\n", fsize, startpos);
-    game_t *game = make_game(fp, startpos);
+    game_t *game = make_game(fp, fname, startpos);
     //    printf("buffer sizes, left: %d right: %d\n", get_size(game->left), get_size(game->right));
     run_game(game);
     free_game(game);

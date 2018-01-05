@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "list.h"
 
@@ -9,14 +10,21 @@ typedef struct game {
     list_t *right;
     uint32_t pos;
     FILE *fp;
+    char *fname;
 } game_t;
 
-game_t *make_game(FILE *fp, uint32_t startpos) {
+game_t *make_game(FILE *fp, char *fn, uint32_t startpos) {
     game_t *ret = (game_t*)calloc(1,sizeof(game_t));
     ret->pos = startpos;
     ret->left = make_list();
     ret->right = make_list();
     ret->fp = fp;
+
+    size_t len = strlen(fn);
+    char *fname = (char*)calloc(len+1,sizeof(uint8_t));
+    strcpy(fname, fn);
+    ret->fname = fname;
+
     // we know startpos will be less than the length of the file
     uint32_t c;
     for (uint32_t i = 0; i < startpos; i++) {
@@ -61,6 +69,7 @@ void free_game(game_t *g) {
     exit_game(g);
     free_list(g->left);
     free_list(g->right);
+    free(g->fname);
     free(g);
 }
 
@@ -85,12 +94,17 @@ void move_right(game_t *g, uint32_t times) {
     }
 }
 void report_pos(game_t *g) {
-    printf("On your left is a %c | On your right is a %c\n",
+    printf("To your left is a \"%c\" and on your right is a \"%c\"\n",
 	   get_first(g->left),
 	   get_first(g->right));
 }
-
+void print_intro(game_t *g) {
+    printf("Welcome brave adventurer!\n");
+    printf("You are exploring the mystical lands of %s\n",
+	   g->fname);
+}
 void run_game(game_t *g) {
+    print_intro(g);
     for (int i = 0; i < 20; i++) {
 	move_right(g,1);
 	report_pos(g);
