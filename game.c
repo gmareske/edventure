@@ -58,7 +58,7 @@ void exit_game(game_t *g) {
 	// todo: check errors (fputc returns EOF on error)
 	remove_front(lbuf);
     }
-    free(lbuf);
+    free_list(lbuf);
     // right side is in order so write it out
     for (uint32_t i = 0; i < get_size(g->right); i++) {
 	fputc(get(g->right, i), g->fp);
@@ -114,6 +114,7 @@ void print_help() {
     printf("(l)eft: move left\n");
     printf("(r)ight: move right\n");
     printf("(k)ill: battle the right obstacle\n");
+    printf("(c)raft: build something to the right\n");
     printf("(h)elp: show this help page\n");
     printf("(q)uit: quit this game session\n");
 }
@@ -130,6 +131,14 @@ void cmd_kill(game_t *g) {
     uint8_t right_char = remove_front(g->right);
     printf("You fight and kill the \"%c\"\n", right_char);
 }
+void cmd_craft(game_t *g) {
+    printf("What do you want to craft?\n");
+    printf(">> ");
+    uint32_t c;
+    scanf(" %c", (char*)&c);
+    insert_front(g->right, c);
+    printf("You craft a \"%c\" and place it to your right.\n",c);
+}
 bool parse_cmd(char *cmd, game_t *g) {
     // pre: cmd is a null-terminated string
     // should come from user input
@@ -143,6 +152,9 @@ bool parse_cmd(char *cmd, game_t *g) {
     } else if ((strcmp(cmd,"k")) == 0 ||
 	       (strcmp(cmd,"kill")) == 0) {
 	cmd_kill(g); return true;
+    } else if ((strcmp(cmd,"c")) == 0 ||
+	       (strcmp(cmd,"craft")) == 0) {
+	cmd_craft(g); return true;
     } else if ((strcmp(cmd,"h")) == 0 ||
 	       (strcmp(cmd,"help")) == 0) {
 	print_help(); return true;
@@ -161,7 +173,7 @@ void run_game(game_t *g) {
 	report_pos(g);
 	printf("> ");
 	char resp[32];
-	scanf("%s", (char*)&resp);
+	scanf(" %s", (char*)&resp);
 	running = parse_cmd(resp, g);
     }
 }
