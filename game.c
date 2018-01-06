@@ -153,7 +153,7 @@ void run_game(game_t *g) {
 	report_pos(g);
 	printf("> ");
 	char resp[32];
-	scanf("%s", &resp);
+	scanf("%s", (char*)&resp);
 	running = parse_cmd(resp, g);
     }
 }
