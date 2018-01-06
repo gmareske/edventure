@@ -43,7 +43,7 @@ void exit_game(game_t *g) {
     // on game exit, write out to the file
     // the contents of left and right buffers
     // reset to the beginning
-    fseek(g->fp, 0, SEEK_SET);
+    rewind(g->fp);
     // the left buffer is backwards, reverse it by shoving
     // everything to a new list.
     uint32_t lbuf_sz = get_size(g->left);
@@ -54,9 +54,8 @@ void exit_game(game_t *g) {
     // write lbuf out
     // todo: is there a faster way than character by character output?
     for (uint32_t i = 0; i < lbuf_sz; i++) {
-	fputc(get_first(lbuf), g->fp);
+	fputc(remove_front(lbuf), g->fp);
 	// todo: check errors (fputc returns EOF on error)
-	remove_front(lbuf);
     }
     free_list(lbuf);
     // right side is in order so write it out
@@ -149,7 +148,8 @@ void cmd_inspect(game_t *g) {
 	i++;
     }
     printf("You inspect your surroundings and see: \n");
-    for (uint32_t j = 0; j < get_size(lbuf); j++) {
+    uint32_t lbuf_sz = get_size(lbuf);
+    for (uint32_t j = 0; j < lbuf_sz; j++) {
 	printf("%c", remove_front(lbuf));
     }
     i = 0;
