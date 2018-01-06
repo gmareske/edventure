@@ -142,7 +142,7 @@ bool parse_cmd(char *cmd, game_t *g) {
 	       (strcmp(cmd,"quit")) == 0) {
 	return false;
     } else {
-	printf("Unrecognized command. (h)elp for a list of commands.\n");
+	printf("Unrecognized command \"%s\". (h)elp for a list of commands.\n", cmd);
 	return true;
     }
 }
