@@ -139,6 +139,27 @@ void cmd_craft(game_t *g) {
     insert_front(g->right, c);
     printf("You craft a \"%c\" and place it to your right.\n",c);
 }
+void cmd_inspect(game_t *g) {
+    list_t *lbuf = make_list();
+    uint32_t i = 0;
+    uint8_t c;
+    uint32_t l_sz = get_size(g->left);
+    while ((c = get(g->left, i)) != '\n' && i < l_sz) {
+	insert_front(lbuf, c);
+	i++;
+    }
+    printf("You inspect your surroundings and see: \n");
+    for (uint32_t j = 0; j < get_size(lbuf); j++) {
+	printf("%c", remove_front(lbuf));
+    }
+    i = 0;
+    uint32_t r_sz = get_size(g->right);
+    while ((c = get(g->right, i)) != '\n' && i < r_sz) {
+	printf("%c", c);
+	i++;
+    }
+    printf("\n");
+}
 bool parse_cmd(char *cmd, game_t *g) {
     // pre: cmd is a null-terminated string
     // should come from user input
@@ -155,6 +176,8 @@ bool parse_cmd(char *cmd, game_t *g) {
     } else if ((strcmp(cmd,"c")) == 0 ||
 	       (strcmp(cmd,"craft")) == 0) {
 	cmd_craft(g); return true;
+    } else if ((strcmp(cmd,"look")) == 0) {
+	cmd_inspect(g); return true;
     } else if ((strcmp(cmd,"h")) == 0 ||
 	       (strcmp(cmd,"help")) == 0) {
 	print_help(); return true;
