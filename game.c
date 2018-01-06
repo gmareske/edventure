@@ -79,8 +79,7 @@ void transfer_from(list_t *origin, list_t *dest) {
     // transfer something across the gap buffer
     // can be called to transfer from left to right or vice versa
     if (get_size(origin) > 0) {
-	uint8_t val = get_first(origin);
-	remove_front(origin);
+	uint8_t val = remove_front(origin);
 	insert_front(dest, val);
     }
 }
@@ -114,6 +113,7 @@ void print_help() {
     printf("\n");
     printf("(l)eft: move left\n");
     printf("(r)ight: move right\n");
+    printf("(k)ill: battle the right obstacle\n");
     printf("(h)elp: show this help page\n");
     printf("(q)uit: quit this game session\n");
 }
@@ -125,6 +125,11 @@ void cmd_move_left(game_t *g) {
     uint32_t times = 1; // todo: temporary
     move_left(g, times);
 }
+void cmd_kill(game_t *g) {
+    // killing a character removes first character to the right
+    uint8_t right_char = remove_front(g->right);
+    printf("You fight and kill the \"%c\"\n", right_char);
+}
 bool parse_cmd(char *cmd, game_t *g) {
     // pre: cmd is a null-terminated string
     // should come from user input
@@ -135,6 +140,9 @@ bool parse_cmd(char *cmd, game_t *g) {
     } else if ((strcmp(cmd,"r")) == 0 ||
 	       (strcmp(cmd,"right")) == 0) {
 	cmd_move_right(g); return true;
+    } else if ((strcmp(cmd,"k")) == 0 ||
+	       (strcmp(cmd,"kill")) == 0) {
+	cmd_kill(g); return true;
     } else if ((strcmp(cmd,"h")) == 0 ||
 	       (strcmp(cmd,"help")) == 0) {
 	print_help(); return true;
