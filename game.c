@@ -37,23 +37,25 @@ game_t *make_game(FILE *fp, char *fn, uint32_t startpos) {
     return ret;
 }
 
+void transfer_from(list_t *origin, list_t *dest);
 void exit_game(game_t *g) {
     // on game exit, write out to the file
     // the contents of left and right buffers
     // reset to the beginning
     fseek(g->fp, 0, SEEK_SET);
-    // the left buffer is backwards, first put all
-    // characters in the the buffer
+    // the left buffer is backwards, reverse it by shoving
+    // everything to a new list.
     uint32_t lbuf_sz = get_size(g->left);
-    uint8_t *lbuf = (uint8_t*)calloc(lbuf_sz, sizeof(uint8_t));
+    list_t *lbuf = make_list();
     for (uint32_t i = 0; i < lbuf_sz; i++) {
-	// very slow!! O(nlogn) at least
-	lbuf[lbuf_sz - 1 - i] = get(g->left, i);
+	transfer_from(g->left, lbuf);
     }
     // write lbuf out
     // todo: is there a faster way than character by character output?
     for (uint32_t i = 0; i < lbuf_sz; i++) {
-	fputc(lbuf[i], g->fp); // todo: check errors (fputc returns EOF on error)
+	fputc(get_first(lbuf), g->fp);
+	// todo: check errors (fputc returns EOF on error)
+	remove_front(lbuf);
     }
     free(lbuf);
     // right side is in order so write it out
@@ -62,7 +64,6 @@ void exit_game(game_t *g) {
     }
     // fp should be closed in main.c so don't close it here
 }
-
 void free_game(game_t *g) {
     // todo: may move this around
     // exit game and write out to file
@@ -73,13 +74,13 @@ void free_game(game_t *g) {
     free(g);
 }
 
-void transfer_from(list_t *origin, list_t *destination) {
+void transfer_from(list_t *origin, list_t *dest) {
     // transfer something across the gap buffer
     // can be called to transfer from left to right or vice versa
     if (get_size(origin) > 0) {
 	uint8_t val = get_first(origin);
 	remove_front(origin);
-	insert_front(destination, val);
+	insert_front(dest, val);
     }
 }
 
