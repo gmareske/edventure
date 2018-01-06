@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "list.h"
 
@@ -95,23 +96,64 @@ void move_right(game_t *g, uint32_t times) {
     }
 }
 void report_pos(game_t *g) {
-    printf("To your left is a \"%c\" and on your right is a \"%c\"\n",
+    printf("To your left is a \"%c\" and to your right is a \"%c\"\n",
 	   get_first(g->left),
 	   get_first(g->right));
 }
+/* Actual game stuff */
 void print_intro(game_t *g) {
     printf("Welcome brave adventurer!\n");
-    printf("You are exploring the mystical lands of %s\n",
+    printf("You are exploring the mystical lands of %s.\n",
 	   g->fname);
+}
+void print_help() {
+    printf("Commands:\n");
+    for (uint32_t i = 0; i < 32; i++) {
+	printf("=");
+    }
+    printf("\n");
+    printf("(l)eft: move left\n");
+    printf("(r)ight: move right\n");
+    printf("(h)elp: show this help page\n");
+    printf("(q)uit: quit this game session\n");
+}
+void cmd_move_right(game_t *g) {
+    uint32_t times = 1; // todo: temporary
+    move_right(g, times);
+}
+void cmd_move_left(game_t *g) {
+    uint32_t times = 1; // todo: temporary
+    move_left(g, times);
+}
+bool parse_cmd(char *cmd, game_t *g) {
+    // pre: cmd is a null-terminated string
+    // should come from user input
+    // returns false only on quitting
+    if ((strcmp(cmd,"l")) == 0 ||
+	(strcmp(cmd,"left")) == 0) {
+	cmd_move_left(g); return true;
+    } else if ((strcmp(cmd,"r")) == 0 ||
+	       (strcmp(cmd,"right")) == 0) {
+	cmd_move_right(g); return true;
+    } else if ((strcmp(cmd,"h")) == 0 ||
+	       (strcmp(cmd,"help")) == 0) {
+	print_help(); return true;
+    } else if ((strcmp(cmd,"q")) == 0 ||
+	       (strcmp(cmd,"quit")) == 0) {
+	return false;
+    } else {
+	printf("Unrecognized command. (h)elp for a list of commands.\n");
+	return true;
+    }
 }
 void run_game(game_t *g) {
     print_intro(g);
-    for (int i = 0; i < 20; i++) {
-	move_right(g,1);
+    bool running = true;
+    while (running) {
 	report_pos(g);
-    }
-    for (int i = 0; i < 10; i++) {
-	move_left(g,1);
-	report_pos(g);
+	printf("> ");
+	char resp[32];
+	scanf("%s", &resp);
+	running = parse_cmd(resp, g);
     }
 }
