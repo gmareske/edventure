@@ -20,7 +20,6 @@ game_t *make_game(FILE *fp, char *fn, uint32_t startpos) {
     ret->left = make_list();
     ret->right = make_list();
     ret->fp = fp;
-
     size_t len = strlen(fn);
     char *fname = (char*)calloc(len+1,sizeof(uint8_t));
     strcpy(fname, fn);
@@ -42,7 +41,7 @@ void transfer_from(list_t *origin, list_t *dest);
 void exit_game(game_t *g) {
     // on game exit, write out to the file
     // the contents of left and right buffers
-    // reset to the beginning
+    // rewind to the beginning of the file
     rewind(g->fp);
     // the left buffer is backwards, reverse it by shoving
     // everything to a new list.
