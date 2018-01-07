@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 #include "list.h"
-/* 
+/*
   Double-pointer linked list implementation
 */
 
