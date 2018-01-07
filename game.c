@@ -19,7 +19,9 @@ game_t *make_game(FILE *fp, char *fn, uint32_t startpos) {
     ret->pos = startpos;
     ret->left = make_list();
     ret->right = make_list();
-    ret->fp = fp;
+    // fp is closed in main.c, and re-opened only when we need
+    // to write out the the file
+    ret->fp = NULL;
     size_t len = strlen(fn);
     char *fname = (char*)calloc(len+1,sizeof(uint8_t));
     strcpy(fname, fn);
@@ -41,8 +43,8 @@ void transfer_from(list_t *origin, list_t *dest);
 void exit_game(game_t *g) {
     // on game exit, write out to the file
     // the contents of left and right buffers
-    // rewind to the beginning of the file
-    rewind(g->fp);
+    // open the file in write mode this time
+    g->fp = fopen(g->fname, "w");
     // the left buffer is backwards, reverse it by shoving
     // everything to a new list.
     uint32_t lbuf_sz = get_size(g->left);
@@ -61,7 +63,9 @@ void exit_game(game_t *g) {
     for (uint32_t i = 0; i < get_size(g->right); i++) {
 	fputc(get(g->right, i), g->fp);
     }
-    // fp should be closed in main.c so don't close it here
+    // close the file pointer here
+    fclose(g->fp);
+    g->fp = NULL;
 }
 void free_game(game_t *g) {
     // todo: may move this around
