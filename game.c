@@ -101,11 +101,38 @@ void move_left(game_t *g, uint32_t times) {
     }
     set_linepos(g);
 }
+
 void move_right(game_t *g, uint32_t times) {
     for (uint32_t i = 0; i < times; i++) {
 	transfer_from(g->right, g->left);
     }
     set_linepos(g);
+}
+
+void seek_left(game_t *g) {
+    /* search left until we find the beginning of the line */
+    while (get_first(g->left) != '\n' && get_size(g->left) > 0) {
+	move_left(g,1);
+    }
+}
+
+void seek_right(game_t *g) {
+    /* search right until we find the beginning of the next line */
+    while (get_first(g->right) != '\n' && get_size(g->right) > 0) {
+	move_right(g,1);
+    }
+    if (get_size(g->right) > 0) {
+	move_right(g,1);
+    }
+}
+
+void move_up(game_t *g) {
+    uint32_t cur = g->line_pos;
+    // go back two lines and go forward to our current position
+    seek_left(g);
+    move_left(g,1);
+    seek_left(g);
+    move_right(g,cur);
 }
 void report_pos(game_t *g) {
     printf("Position %d in line.\n", g->line_pos);
@@ -127,6 +154,7 @@ void print_help() {
     printf("\n");
     printf("(l)eft: move left\n");
     printf("(r)ight: move right\n");
+    printf("(u)p: move up\n");
     printf("(k)ill: battle the right obstacle\n");
     printf("(c)raft: build something to the right\n");
     printf("look: inspect immediate surroundings\n");
@@ -140,6 +168,10 @@ void cmd_move_right(game_t *g) {
 void cmd_move_left(game_t *g) {
     uint32_t times = 1; // todo: temporary
     move_left(g, times);
+}
+void cmd_move_up(game_t *g) {
+    //uint32_t times = 1;
+    move_up(g);
 }
 void cmd_kill(game_t *g) {
     // killing a character removes first character to the right
@@ -188,6 +220,9 @@ bool parse_cmd(char *cmd, game_t *g) {
     } else if ((strcmp(cmd,"r")) == 0 ||
 	       (strcmp(cmd,"right")) == 0) {
 	cmd_move_right(g); return true;
+    } else if ((strcmp(cmd,"u")) == 0 ||
+	       (strcmp(cmd,"up")) == 0) {
+	cmd_move_up(g); return true;
     } else if ((strcmp(cmd,"k")) == 0 ||
 	       (strcmp(cmd,"kill")) == 0) {
 	cmd_kill(g); return true;
