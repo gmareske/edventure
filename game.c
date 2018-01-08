@@ -137,10 +137,12 @@ void cmd_kill(game_t *g) {
 void cmd_craft(game_t *g) {
     printf("What do you want to craft?\n");
     printf(">> ");
-    uint32_t c;
-    scanf(" %c", (char*)&c);
-    insert_front(g->right, c);
-    printf("You craft a \"%c\" and place it to your right.\n",c);
+    char c[2048]; // arbitrary
+    scanf(" %s", (char*)&c);
+    for (uint32_t i = strlen(c); i > 0; i--) {
+	insert_front(g->right,c[i-1]);
+    }
+    printf("You craft a \"%s\" and place it to your right.\n",c);
 }
 void cmd_inspect(game_t *g) {
     list_t *lbuf = make_list();
