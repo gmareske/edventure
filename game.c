@@ -12,8 +12,15 @@ typedef struct game {
     uint32_t pos;
     FILE *fp;
     char *fname;
+    uint32_t line_pos;
 } game_t;
 
+void set_linepos(game_t *g) {
+    uint32_t j;
+    uint32_t left_len = get_size(g->left);
+    for (j = 0; get(g->left, j) != '\n'&& j < left_len; j++) {}
+    g->line_pos = j;
+}
 game_t *make_game(FILE *fp, char *fn, uint32_t startpos) {
     game_t *ret = (game_t*)calloc(1,sizeof(game_t));
     ret->pos = startpos;
@@ -36,6 +43,8 @@ game_t *make_game(FILE *fp, char *fn, uint32_t startpos) {
     while ((int32_t)(c = getc(fp)) != EOF) {
 	insert_back(ret->right, c);
     }
+    // set inital position in line
+    set_linepos(ret);
     return ret;
 }
 
@@ -90,13 +99,16 @@ void move_left(game_t *g, uint32_t times) {
     for (uint32_t i = 0; i < times; i++) {
 	transfer_from(g->left, g->right);
     }
+    set_linepos(g);
 }
 void move_right(game_t *g, uint32_t times) {
     for (uint32_t i = 0; i < times; i++) {
 	transfer_from(g->right, g->left);
     }
+    set_linepos(g);
 }
 void report_pos(game_t *g) {
+    printf("Position %d in line.\n", g->line_pos);
     printf("To your left is a \"%c\" and to your right is a \"%c\"\n",
 	   get_first(g->left),
 	   get_first(g->right));
