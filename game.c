@@ -109,7 +109,7 @@ void print_intro(game_t *g) {
 }
 void print_help() {
     printf("Commands:\n");
-    for (uint32_t i = 0; i < 32; i++) {
+    for (uint32_t i = 0; i < 48; i++) {
 	printf("=");
     }
     printf("\n");
@@ -117,6 +117,7 @@ void print_help() {
     printf("(r)ight: move right\n");
     printf("(k)ill: battle the right obstacle\n");
     printf("(c)raft: build something to the right\n");
+    printf("look: inspect immediate surroundings\n");
     printf("(h)elp: show this help page\n");
     printf("(q)uit: quit this game session\n");
 }
