@@ -1,1 +1,5 @@
 *~
+edv
+# I name all my test files test-something.txt
+# don't need to include tests yet
+test*
