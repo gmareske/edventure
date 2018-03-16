@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-g -Wall -Wextra -pedantic -std=c11
 EXEC=edv
 
-SOURCES=main.c game.c list.c
+SOURCES=main.c game.c list.c cmd.c
 OBJECTS=$(SOURCES:.c=.o)
 
 # target_name:  dependency_list

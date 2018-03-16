@@ -2,12 +2,14 @@
 #include <stdint.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #include "game.h"
+#include "cmd.h"
 
 uint32_t file_size(char *fname) {
     struct stat st;
@@ -15,6 +17,17 @@ uint32_t file_size(char *fname) {
 	return st.st_size;
     } else {
 	return -1;
+    }
+}
+void run_game(game_t *g) {
+    print_intro(g);
+    bool running = true;
+    while (running) {
+	report_pos(g);
+	printf("> ");
+	char resp[32];
+	scanf(" %s", (char*)&resp);
+	running = parse_cmd(resp, g);
     }
 }
 int main(int argc, char **args) {

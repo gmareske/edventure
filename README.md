@@ -1,4 +1,4 @@
-# edventure (edv)
+# edventure (edv)(c)
 
 A text editing adventure. Or an adventurous text editor. 
 
