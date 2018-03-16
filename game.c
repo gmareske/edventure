@@ -9,7 +9,7 @@
 typedef struct game {
     list_t *left;
     list_t *right;
-    uint32_t pos;
+    uint32_t pos; 
     FILE *fp;
     char *fname;
     uint32_t line_pos;
@@ -98,6 +98,7 @@ void move_left(game_t *g, uint32_t times) {
     for (uint32_t i = 0; i < times; i++) {
 	transfer_from(g->left, g->right);
     }
+    g->pos -= times;
     set_linepos(g);
 }
 
@@ -105,6 +106,7 @@ void move_right(game_t *g, uint32_t times) {
     for (uint32_t i = 0; i < times; i++) {
 	transfer_from(g->right, g->left);
     }
+    g->pos += times;
     set_linepos(g);
 }
 
@@ -147,10 +149,12 @@ void move_down(game_t *g) {
 }
 void report_pos(game_t *g) {
     printf("Position %d in line.\n", g->line_pos);
+    printf("Position %d in file.\n",g->pos); // TEST, remove before commit
     printf("To your left is a \"%c\" and to your right is a \"%c\"\n",
 	   get_first(g->left),
 	   get_first(g->right));
 }
+
 /* Actual game stuff */
 void print_intro(game_t *g) {
     printf("Welcome brave adventurer!\n");
