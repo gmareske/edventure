@@ -1,7 +1,9 @@
 #pragma once
-// cmd.h
-// should only be exposing the parse command to main
-// where main controls the game event loop
+
+/*
+  cmd.h exposes functions that a game loop
+  in main.c might need in order to run the game
+*/
 
 #include "game.h"
 

@@ -6,6 +6,11 @@
 #include "list.h"
 #include "game.h"
 
+/*
+  This file contains logic for different commands that the user can enter
+  It has full access to the rest of game.c's features
+*/
+
 void report_pos(game_t *g) {
     printf("Position %d in line.\n", g->line_pos);
     printf("To your left is a \"%c\" and to your right is a \"%c\"\n",
