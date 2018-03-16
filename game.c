@@ -65,6 +65,7 @@ void exit_game(game_t *g) {
     for (uint32_t i = 0; i < lbuf_sz; i++) {
 	fputc(remove_front(lbuf), g->fp);
 	// todo: check errors (fputc returns EOF on error)
+	// not sure how I would gracefully exit here
     }
     free_list(lbuf);
     // right side is in order so write it out
