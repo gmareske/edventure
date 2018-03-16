@@ -47,7 +47,6 @@ game_t *make_game(FILE *fp, char *fn, uint32_t startpos) {
     set_linepos(ret);
     return ret;
 }
-
 void transfer_from(list_t *origin, list_t *dest);
 void exit_game(game_t *g) {
     // on game exit, write out to the file
@@ -134,6 +133,18 @@ void move_up(game_t *g) {
     seek_left(g);
     move_right(g,cur);
 }
+void move_down(game_t *g) {
+    uint32_t cur = g->line_pos;
+    // go forward one line, then go forward to current position
+    // or the end of the line
+    seek_right(g);
+    uint32_t i = 0;
+    while (i < cur &&
+	   get_first(g->right) != '\n' &&
+	   get_size(g->right) > 0) {
+	move_right(g,1);
+    }
+}
 void report_pos(game_t *g) {
     printf("Position %d in line.\n", g->line_pos);
     printf("To your left is a \"%c\" and to your right is a \"%c\"\n",
@@ -155,6 +166,7 @@ void print_help() {
     printf("(l)eft: move left\n");
     printf("(r)ight: move right\n");
     printf("(u)p: move up\n");
+    printf("(d)own: move down\n");
     printf("(k)ill: battle the right obstacle\n");
     printf("(c)raft: build something to the right\n");
     printf("look: inspect immediate surroundings\n");
@@ -172,6 +184,10 @@ void cmd_move_left(game_t *g) {
 void cmd_move_up(game_t *g) {
     //uint32_t times = 1;
     move_up(g);
+}
+void cmd_move_down(game_t *g) {
+    //uint32_t times = 1;
+    move_down(g);
 }
 void cmd_kill(game_t *g) {
     // killing a character removes first character to the right
@@ -223,6 +239,9 @@ bool parse_cmd(char *cmd, game_t *g) {
     } else if ((strcmp(cmd,"u")) == 0 ||
 	       (strcmp(cmd,"up")) == 0) {
 	cmd_move_up(g); return true;
+    } else if ((strcmp(cmd,"d")) == 0 ||
+	       (strcmp(cmd,"down")) == 0) {
+	cmd_move_down(g); return true;
     } else if ((strcmp(cmd,"k")) == 0 ||
 	       (strcmp(cmd,"kill")) == 0) {
 	cmd_kill(g); return true;
